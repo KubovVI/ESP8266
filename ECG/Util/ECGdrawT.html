@@ -1,0 +1,110 @@
+<html>
+<head>
+<style>
+  body,table,input,select {font-size:20px; text-align:center}
+  input[type=button]{width:120px}
+  input[type=submit]{width:100px}
+  input[type=range]{width:360px}
+  input[type=file]{width:600px; text-align:left}
+</style>
+<script>
+  strData="";
+  dataSize=20; segSize=100;
+  Cmin=0; Cmax=1024; //Code ADC
+  Vmax=3.3/2/0.6; Vmin=-Vmax; //in 2.75mV
+  dVs=0.5;//mV
+  cScale=1; // Scale factor
+  yScale=0.4;//temp
+  dXp=0.5;
+  YpSize=dataSize*segSize; 
+  var Yp=new Array(YpSize);
+  for (i=0; i<YpSize; i++) Yp[i]=512; //i%Cmax;
+  var clickNumber=0;
+  var clickX=new Array(2)
+//--------------------------- Draw ------------------------------  
+  function Draw(){ 
+    gr.save();
+    gr.clearRect(0,0,picW,picH);
+    Grid();
+    Graph();
+    gr.restore();
+  };
+  function Grid(){
+    dXgr=100; dYgr=100;
+    gr.strokeStyle='#8080ff'; gr.lineWidth=1; 
+    //gr.strokeRect(1,1,picW-2,picH-2);
+    gr.lineWidth=2;
+    for (i=0; i<segSize; i++) gr.strokeRect(dXgr*i,0,0,picH);  
+    gr.lineWidth=1; dXof=dXgr/2;
+    for (i=0; i<segSize; i++) gr.strokeRect(dXgr*i+dXof,0,0,picH);  
+    dV=dVs*cScale; iMax=Math.floor(Vmax/dV);
+    for (i=-iMax; i<=iMax; i++) {
+      y=remap(dV*i,Vmin,Vmax,Ymin,Ymax);
+      if(i%2==0)gr.lineWidth=2; else gr.lineWidth=1;
+      gr.strokeRect(0,y,picW,0);
+    };  
+  };
+  function Graph(){
+     gr.strokeStyle='#000000'; gr.lineWidth=2;  
+     gr.beginPath();
+     for (i=0; i<YpSize; i++) {
+       v=remap(Yp[i],Cmin,Cmax,Vmin,Vmax)*cScale;
+       y=remap(v,Vmin,Vmax,Ymin,Ymax);
+       gr.lineTo(i*dXp,y);
+     };  
+     gr.stroke();
+  };
+  function remap(x,xMin,xMax,yMin,yMax){
+    return(yMin+(yMax-yMin)*(x-xMin)/(xMax-xMin));
+  };
+//------------------------- Read Data File ------------------------ 
+function decodeString(nMax){
+  // extract Y from data format: X\tY\n
+  var pt=-1; var pn=-1; 
+  for (i=0; i<nMax; i++){
+    pt=strData.indexOf("\t", pt+1);
+    if (pt<0) break; 
+    pn=strData.indexOf("\n", pn+1);
+    Yp[i]=parseInt(strData.substring(pt+1,pn));
+  }//for i
+};
+function newData(){
+  var f=myInput.files[0];
+  var FR=new FileReader();
+  FR.onload=function(e){ 
+    strData=e.target.result;
+    //alert(strData.length);
+    decodeString(YpSize);
+    //alert("Done");
+    Draw();
+    clickNumber=0;
+  }//func
+  FR.readAsText(f);
+};
+//---------------------- Mouse Click Processing -------------------
+function picClick(e){
+  //alert(e.clientX);
+  clickX[clickNumber]=e.clientX;
+  if (clickNumber==1) {
+    dTime=(clickX[1]-clickX[0])*dXp*2/100;
+    nPeriods=1; //nPeriods=prompt("Number Periods?",1);
+    pulse=60/(dTime/nPeriods);
+    alert("Pulse="+Math.round(pulse)); 
+  }//if
+  clickNumber++; if (clickNumber>1)clickNumber=0;
+};
+</script>
+</head>
+<body onLoad=Draw()>
+<script> if (!window.WebSocket) alert('Sockets Not Supported'); </script>
+<canvas id=pic height=402 width=1002 onClick=picClick(event)></canvas>
+<script>
+  gr=pic.getContext('2d'); 
+  picW=pic.width; picH=pic.height;
+  Ymin=picH; Ymax=0;
+</script>
+<br><b>Select Data File</b>:
+<input id=myInput type=file accept=".Log" onChange=newData() style="border:3px solid Red"> 
+<br>Click two nearest peakes to calculate Pulse rate. Scale: 0.5mV; 0.5s.
+</body>
+</html>
