@@ -1,3 +1,4 @@
+// Kubov V.I. 2018
 #define _ssid "EspCardio01"
 #define _pass "123456789" // if need
 #define _login "admin"
