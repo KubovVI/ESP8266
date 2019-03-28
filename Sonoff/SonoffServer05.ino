@@ -1,3 +1,4 @@
+//Kubov V.I. 2018 
 #define _ssid "Sonoff17"
 #define _version "SonoffServer05"
 #define _pass "123456789" 
