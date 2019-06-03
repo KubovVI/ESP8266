@@ -1,3 +1,4 @@
+//Kubov V.I. 2019
 // R9=1Mohm K=1100
 #define _ssid "EspCardio03"
 #define _pass "123456789" // if need
