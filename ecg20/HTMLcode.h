@@ -1,3 +1,4 @@
+// Kubov V.I. 2019
 #define _dataSize 100
 #define _segSize 10
 
