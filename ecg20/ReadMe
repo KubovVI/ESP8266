@@ -1,1 +1,7 @@
+WiFi-ECG AccessPoint mode
+Draw ECG
+Save data Log-file on clent device
+Auto save by fixed time interval on request
+New
 Progamm-code devided on Server-code and HTML-code
+Broadcast changed to personalised WebSockets send 
