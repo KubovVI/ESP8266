@@ -12,7 +12,7 @@ int16_t getECGraw(void){
   return (analogRead(0)-_ECGoffset)*_ECGscale;
 }//getECGraw
 
-#define _ringSize 268
+#define _ringSize 268 //delay ECG to PPG
 int16_t ringDelay[_ringSize];
 int iC=0;
 int16_t getECG(void){
