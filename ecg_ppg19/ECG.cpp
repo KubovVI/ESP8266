@@ -1,8 +1,8 @@
 /*
   Kubov V.I. 2019
+  ECG. AD8232 R9=1Mohm K=1100 pin: Output - A0
 */
 
-//  ECG. AD R9=1Mohm K=1100
 #define _ECGscale 2.93 // 3000/1024
 #define _ECGoffset 512 // ADC
 
