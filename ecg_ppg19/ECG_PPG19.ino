@@ -2,7 +2,7 @@
   Kubov V.I. 2019
   ESP8266
   PPG. Max30102. i2c default pins: 4-SDA-D2; 5-SCL-D1
-  ECG. AD R9=1Mohm K=1100
+  ECG. AD8232 R9=1Mohm K=1100 pin: Output - A0
 */
 #define _ssid "EspECGPPG02"
 #define _pass "123456789" // if need
