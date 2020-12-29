@@ -47,9 +47,12 @@ void setup(){
   Serial.println();
   
   setupWiFi();
-  while (WiFi.status() != WL_CONNECTED){
-    delay(500); Serial.print("."); 
-  }//while
+  if (WiFi.getMode()==WIFI_STA){
+    Serial.println("Wait for connection");
+    while (WiFi.status() != WL_CONNECTED){
+      delay(500); Serial.print("."); 
+    }//while
+  }//if
   server.on("/", server_root);
   server.on("/act", server_act);
   server.begin();
